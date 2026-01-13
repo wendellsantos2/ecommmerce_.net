@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace CasaDoCodigo.Repositories
 {
-    public class ProdutoRepository : BaseRepository<Produto>, IProdutoRepository
+    public class CadastroRepository : BaseRepository<Produto>, ICadastroRepository
     {
         private readonly ApplicationContext _contexto;
 
-        public ProdutoRepository(ApplicationContext contexto) : base(contexto)
+        public CadastroRepository(ApplicationContext contexto) : base(contexto)
         {
             _contexto = contexto; // <- FALTAVA ISSO
         }
