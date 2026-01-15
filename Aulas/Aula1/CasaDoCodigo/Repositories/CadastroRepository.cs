@@ -1,31 +1,37 @@
 ﻿using CasaDoCodigo.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CasaDoCodigo.Repositories
 {
-    public class CadastroRepository : BaseRepository<Produto>, ICadastroRepository
+    public interface ICadastroRepository
     {
-        private readonly ApplicationContext _contexto;
+        Task<Cadastro> Update(int cadastroId, Cadastro novoCadastro);
+    }
 
+    public class CadastroRepository : BaseRepository<Cadastro>, ICadastroRepository
+    {
         public CadastroRepository(ApplicationContext contexto) : base(contexto)
         {
-            _contexto = contexto; // <- FALTAVA ISSO
         }
 
-        public IList<Produto> GetProdutos()
+        public async Task<Cadastro> Update(int cadastroId, Cadastro novoCadastro)
         {
-            return dbSet.ToList(); // ok se BaseRepository inicializa dbSet
-        }
+            var cadastroDB = 
+                await dbSet.Where(c => c.Id == cadastroId)
+                .SingleOrDefaultAsync();
 
-        public void SaveProdutos(IEnumerable<Livro> livros)
-        {
-            foreach (var livro in livros)
+            if (cadastroDB == null)
             {
-                _contexto.Set<Produto>().Add(new Produto(livro.Codigo, livro.Nome, livro.Preco));
+                throw new ArgumentNullException("cadastro");
             }
 
-            _contexto.SaveChanges();
+            cadastroDB.Update(novoCadastro);
+            await contexto.SaveChangesAsync();
+            return cadastroDB;
         }
     }
 }

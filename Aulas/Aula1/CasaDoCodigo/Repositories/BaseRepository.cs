@@ -1,15 +1,21 @@
-﻿using CasaDoCodigo;
-using CasaDoCodigo.Models;
+﻿using CasaDoCodigo.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-public class BaseRepository<T> where T : BaseModel
+namespace CasaDoCodigo.Repositories
 {
-    protected private readonly ApplicationContext contexto;
-    protected private readonly DbSet<T> dbSet;
-
-    public BaseRepository(ApplicationContext contexto)
+    public abstract class BaseRepository<T> where T : BaseModel
     {
-        this.contexto = contexto;
-        dbSet = contexto.Set<T>();
+        protected readonly ApplicationContext contexto;
+        protected readonly DbSet<T> dbSet;
+
+        public BaseRepository(ApplicationContext contexto)
+        {
+            this.contexto = contexto;
+            dbSet = contexto.Set<T>();
+        }
     }
 }
